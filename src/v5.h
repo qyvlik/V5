@@ -2,6 +2,7 @@
 #define V5_H
 
 #include <iostream>
+#include <list>
 
 #define V5_NAMESPACE_BEGIN  namespace V5 {
 
@@ -21,7 +22,11 @@ class Variant;
 class Runtime;
 class Engine;
 
-}
+typedef std::pair<std::string, std::string> Token;
+typedef std::list<Token> TokenList;
+
+
+} //namespace V5
 
 
 #endif // V5_H

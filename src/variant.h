@@ -13,6 +13,6 @@ public:
 };
 
 
-}
+} //namespace V5
 
 #endif // VARIANT_H
