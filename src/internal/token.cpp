@@ -1,6 +1,6 @@
 #include "token.h"
 
-//namespace V5 {
+namespace V5 {
 
 #define T(name, string, precedence) #name,
 const char* const Token::name_[] = {
@@ -32,4 +32,7 @@ const char Token::token_type[] = {
 #undef KK
 
 
-//}
+}
+
+
+

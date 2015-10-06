@@ -20,15 +20,16 @@ class V5Parser
 public:
 
     explicit V5Parser();
-    ~V5Parser();
+//    ~V5Parser();
 
-    int lexicalParser(const std::string& filename);
+//    int lexicalParser(const std::string& filename);
 
-    TokenList& tokens();
-    const TokenList& tokens()const;
+//    TokenList& tokens();
+//    const TokenList& tokens()const;
 
-private:
-    LexicalParser* m_lexicalParser;
+//private:
+//    LexicalParser* m_lexicalParser;
+
 };
 
 

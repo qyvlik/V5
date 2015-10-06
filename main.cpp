@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "src/object.h"
-#include "src/arguments.h"
+#include "src/argument.h"
 
 using namespace V5;
 using namespace std;
@@ -9,11 +9,14 @@ using namespace std;
 int main()
 {
     Object o;
-    o.objectName();
 
-    Object::call fuck = findMethod<Object>("fuck");
+    o.setObjectName("Nyou");
+
+    Object::call fuck = findMethod<Object>("action");
 
     fuck(&o, Arguments());
+
+    cout << o.toString() << endl;
 
     return 0;
 }

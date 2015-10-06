@@ -1,11 +1,10 @@
 #ifndef LEXICALPARSER_H
 #define LEXICALPARSER_H
 
-#include "v5.h"
-#include <string>
+#include "../v5.h"
+#include "token.h"
 
 namespace V5 {
-
 
 class LexicalParser
 {

@@ -1,11 +1,11 @@
-#ifndef VARIANT_H
-#define VARIANT_H
+#ifndef ARGUMENT_H
+#define ARGUMENT_H
 
 #include "v5.h"
 
 namespace V5 {
 
-#define VARIANT_TYPE_LIST(T, K)                   \
+#define ARGUMENT_TYPE_LIST(T, K)                  \
     T(Invalid, "Invalid")                         \
     T(Bool, "Bool")                               \
     T(Int, "Int")                                 \
@@ -16,28 +16,16 @@ namespace V5 {
     T(String, "String")                           \
     T(Object, "Object")                           \
 
-class VariantPrivate;
 
-class Variant
+class Argument
 {
 public:
-
-#define T(name, string) name,
-    enum Type {
-        VARIANT_TYPE_LIST(T,T)
-        TypeNumbers,
-        LastType = 0xfffffff
-    };
-#undef T
-
-    Variant();
-    bool isValid() const ;
-private:
-    VariantPrivate* d_ptr;
-
+    Argument();
 };
 
 
-} //namespace V5
+typedef std::list<Argument> Arguments;
 
-#endif // VARIANT_H
+}
+
+#endif // ARGUMENT_H

@@ -68,9 +68,9 @@ LexicalParser::Error LexicalParser::parser(const string &fileName)
                 n++;
 
             if(n >= KeywordCount) {
-                m_tokens.push_back(Token("ID", token));
+                m_tokens.push_back(Token(Token::IDENTIFIER, token));
             } else {
-                m_tokens.push_back(Token(token, token));
+                m_tokens.push_back(Token(Token::findType(token), token));
             }
             //! [检查是否为保留字]
 
@@ -82,13 +82,13 @@ LexicalParser::Error LexicalParser::parser(const string &fileName)
                 token.push_back(word);
                 word = sourceFile.get();
             }
-            m_tokens.push_back(Token("Number", token));
+            m_tokens.push_back(Token(Token::NUMBER, token));
 
         } else if (strchr(Singlewords, word)!=NULL) {
             token.clear();
             token.push_back(word);
             word = sourceFile.get();
-            m_tokens.push_back(Token(token, token));
+            m_tokens.push_back(Token(Token::IDENTIFIER, token));
 
         } else if (strchr(Doublewords, word)!=NULL) {
             token.clear();
@@ -100,7 +100,7 @@ LexicalParser::Error LexicalParser::parser(const string &fileName)
             } else {
                 token.push_back('\0');
             }
-            m_tokens.push_back(Token(token, token));
+            m_tokens.push_back(Token(Token::IDENTIFIER, token));
 
             //! 过滤注释
         } else if(word == '/') {
@@ -115,7 +115,7 @@ LexicalParser::Error LexicalParser::parser(const string &fileName)
             } else {
                 token.clear();
                 token.append("/\0");
-                m_tokens.push_back(Token(token, token));
+                m_tokens.push_back(Token(Token::IDENTIFIER, token));
             }
         }
 
@@ -136,7 +136,7 @@ LexicalParser::Error LexicalParser::parser(const string &fileName)
                     do {
                         word = sourceFile.get();
                         if(word == EOF) {
-                            m_tokens.push_back(Token("ERROR", token));
+                            m_tokens.push_back(Token(Token::ERROR, token));
                             return Error::HasError;;
                         }
                         token.push_back(word);
@@ -146,14 +146,14 @@ LexicalParser::Error LexicalParser::parser(const string &fileName)
                 }
             }
             word = sourceFile.get();
-            m_tokens.push_back(Token("String", token));
+            m_tokens.push_back(Token(Token::STRING, token));
         }
 
         else {
             token.clear();
             token.push_back(word);
             word = sourceFile.get();
-            m_tokens.push_back(Token("ERROR", token));
+            m_tokens.push_back(Token(Token::ERROR, token));
             sourceFile.close();
             return Error::HasError;
         }

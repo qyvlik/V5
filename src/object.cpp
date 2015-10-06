@@ -1,5 +1,7 @@
 #include "object.h"
 
+#include <sstream>
+
 using namespace std;
 
 namespace V5 {
@@ -16,9 +18,9 @@ const pair<const string, Object::call> Object::ObjectMethodCallList[] = {
     },
     {
         pair<const string, call>(
-        "fuck",
+        "toString",
         [&](Object* thiz, Arguments ) mutable -> Return {
-            thiz->fuck();
+            thiz->toString();
             return Return();
         })
     }
@@ -35,14 +37,35 @@ Object::Object()
 
 }
 
+Object::~Object()
+{
+
+}
+
+
 std::string Object::objectName() const
 {
     return m_objectName;
 }
 
-void Object::fuck()
+void Object::setObjectName(const string &name)
 {
-    cout << "call fuck..." << endl;
+    if(m_objectName != name) {
+        m_objectName = name;
+    }
+}
+
+string Object::toString() const
+{
+    stringstream ss;
+    ss << this;
+    string address;
+    ss >> address;
+
+    string s("Object(");
+    s += address;
+    s += m_objectName.empty() ? ")" : " ," + m_objectName + ")";
+    return s;
 }
 
 

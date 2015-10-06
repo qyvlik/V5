@@ -2,10 +2,13 @@
 #define TOKEN_H
 
 #include <cassert>
+#include <string>
+#include <list>
 
-//namespace V5 {
+namespace V5 {
 
 #define TOKEN_LIST(T, K)                                               \
+    T(ERROR, "ERROR",0)                                                \
     /* End of source indicator. */                                     \
     T(EOS, "EOS", 0)                                                   \
     \
@@ -154,8 +157,10 @@
 class Token
 {
 
+public:
+
 #define T(name, string, precedence) name,
-    enum Value {
+    enum Type {
         TOKEN_LIST(T, T)
         NUM_TOKENS
     };
@@ -163,53 +168,78 @@ class Token
 
     // Returns a string corresponding to the C++ token name
     // (e.g. "LT" for the token LT).
-    static const char* Name(Value tok) {
+
+
+    Token(Type t, std::string s):
+        type(t),
+        string(s) {
+
+    }
+
+    static Type findType(const std::string& name) {
+        for(int iter=0; iter<NUM_TOKENS; iter++) {
+            if(name_[iter] == name) {
+                return (Type)iter;
+            }
+        }
+        return IDENTIFIER;
+    }
+
+    static const char* Name(Type tok) {
         assert(tok < NUM_TOKENS);  // tok is unsigned
         return name_[tok];
     }
 
     // Predicates
-    static bool IsKeyword(Value tok) {
+    static bool IsKeyword(Type tok) {
         return token_type[tok] == 'K';
     }
 
-    static bool IsAssignmentOp(Value tok) {
-        return INIT_VAR <= tok && tok <= ASSIGN_MOD;
+    static bool IsIdentifier(Type tok) {
+      return tok == IDENTIFIER;
     }
 
-    static bool IsBinaryOp(Value op) {
+    //! [un-user]
+    static bool IsAssignmentOp(Type tok) {
+        return INIT_VAR <= tok && tok <= ASSIGN_MOD;
+    }
+    //! [un-user]
+
+    static bool IsBinaryOp(Type op) {
         return COMMA <= op && op <= MOD;
     }
 
-    static bool IsTruncatingBinaryOp(Value op) {
+    static bool IsTruncatingBinaryOp(Type op) {
         return BIT_OR <= op && op <= ROR;
     }
 
-    static bool IsCompareOp(Value op) {
+    // 比较运算符
+    static bool IsCompareOp(Type op) {
         return EQ <= op && op <= IN;
     }
 
-    static bool IsOrderedRelationalCompareOp(Value op) {
+    // 有序关系比较
+    static bool IsOrderedRelationalCompareOp(Type op) {
         return op == LT || op == LTE || op == GT || op == GTE;
     }
 
-    static bool IsEqualityOp(Value op) {
+    static bool IsEqualityOp(Type op) {
         return op == EQ || op == EQ_STRICT;
     }
 
     // 不等式
-    static bool IsInequalityOp(Value op) {
+    static bool IsInequalityOp(Type op) {
         return op == NE || op == NE_STRICT;
     }
 
     // 比较运算符
-    static bool IsArithmeticCompareOp(Value op) {
+    static bool IsArithmeticCompareOp(Type op) {
         return IsOrderedRelationalCompareOp(op) ||
                 IsEqualityOp(op) || IsInequalityOp(op);
     }
 
     // 反转比较运算符
-    static Value NegateCompareOp(Value op) {
+    static Type NegateCompareOp(Type op) {
         assert(IsArithmeticCompareOp(op));
         switch (op) {
         case EQ: return NE;
@@ -226,7 +256,7 @@ class Token
     }
 
     // 反转比较运算符
-    static Value ReverseCompareOp(Value op) {
+    static Type ReverseCompareOp(Type op) {
         assert(IsArithmeticCompareOp(op));
         switch (op) {
         case EQ: return EQ;
@@ -243,48 +273,54 @@ class Token
     }
 
     // 位操作运算符
-    static bool IsBitOp(Value op) {
+    static bool IsBitOp(Type op) {
         return (BIT_OR <= op && op <= SHR) || op == BIT_NOT;
     }
 
     // 一元运算符
-    static bool IsUnaryOp(Value op) {
+    static bool IsUnaryOp(Type op) {
         return (NOT <= op && op <= VOID) || op == ADD || op == SUB;
     }
 
     // 自加自减运算符
-    static bool IsCountOp(Value op) {
+    static bool IsCountOp(Type op) {
         return op == INC || op == DEC;
     }
 
     // 位移运算符
-    static bool IsShiftOp(Value op) {
+    static bool IsShiftOp(Type op) {
         return (SHL <= op) && (op <= SHR);
     }
 
     // Returns a string corresponding to the JS token string
     // (.e., "<" for the token LT) or NULL if the token doesn't
     // have a (unique) string (e.g. an IDENTIFIER).
-    static const char* String(Value tok) {
+    static const char* String(Type tok) {
         assert(tok > NUM_TOKENS);  // tok is unsigned.
         return string_[tok];
     }
 
     // Returns the precedence > 0 for binary and compare
     // operators; returns 0 otherwise.
-    static int Precedence(Value tok) {
+    static int Precedence(Type tok) {
         assert(tok < NUM_TOKENS);  // tok is unsigned.
         return precedence_[tok];
     }
 
-private:
+    Type type;
+    std::string string;
+
+protected:
     static const char* const name_[NUM_TOKENS];
     static const char* const string_[NUM_TOKENS];
     static const int precedence_[NUM_TOKENS];
     static const char token_type[NUM_TOKENS];
+
 };
 
+typedef std::list<Token> TokenList;
 
-//}
+
+}
 
 #endif // TOKEN_H

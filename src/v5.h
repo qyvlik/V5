@@ -13,18 +13,16 @@
 
 #define V5_FRIEND friend
 
+#define V5_INLINE inline
+
 namespace V5 {
 
 class Object;
-class Arguments;
+class Argument;
 class Return;
 class Variant;
 class Runtime;
 class Engine;
-
-typedef std::pair<std::string, std::string> Token;
-typedef std::list<Token> TokenList;
-
 
 } //namespace V5
 

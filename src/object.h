@@ -2,7 +2,7 @@
 #define OBJECT_H
 
 #include "v5.h"
-#include "arguments.h"
+#include "argument.h"
 #include "return.h"
 #include "variant.h"
 
@@ -33,11 +33,16 @@ static std::function<Return(T*, Arguments)> findMethod(const std::string& method
 
 class Object
 {
-    V5_SCRIPT_OBJECT(Object)
+    V5_SCRIPT_OBJECT(Object);
 
-    public: Object();
+public:
+    Object();
+    virtual ~Object();
+
     V5_INVOKABLE std::string objectName()const;
-    V5_INVOKABLE void fuck();
+    V5_INVOKABLE void setObjectName(const std::string& name);
+
+    V5_INVOKABLE virtual std::string toString() const;
 
 private:
     std::string m_objectName;
