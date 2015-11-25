@@ -5,6 +5,8 @@ CppApplication {
     consoleApplication: true
     files: [
         "main.cpp",
+        "src/parser/parser.cpp",
+        "src/parser/parser.h",
         "src/parser/scanner.cpp",
         "src/parser/scanner.h",
         "src/parser/token.cpp",

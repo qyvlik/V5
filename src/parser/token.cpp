@@ -100,6 +100,24 @@ bool Token::isDoubleWord(int word)
     return false;
 }
 
+bool Token::isDeclaraWord(const string &word)
+{
+    const static vector<string> declaraWordList = {
+        "var",
+        "int",
+        "double",
+        "float",
+        "long"
+    };
+
+    for(size_t i=0; i<declaraWordList.size(); i++ ) {
+        if(word == declaraWordList[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 string Token::getTokenType() const
 {
     return tokenType;

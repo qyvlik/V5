@@ -19,6 +19,10 @@ Scanner::~Scanner()
 
 int Scanner::scan()
 {
+    if(!inputStream->isOpen()) {
+        return 1;
+    }
+
     letter = inputStream->get();
 
     while(letter != EOF) {

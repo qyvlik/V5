@@ -3,8 +3,6 @@
 
 using namespace std;
 
-
-
 int main(int , char** )
 {
     Scanner scanner("./test01.v5");

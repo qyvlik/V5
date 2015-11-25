@@ -35,6 +35,8 @@ public:
 
     static bool isDoubleWord(int word);
 
+    static bool isDeclaraWord(const std::string &word);
+
     static const std::vector<std::string> KeyWord;
 
     static const std::vector<std::string> SingleWord;
