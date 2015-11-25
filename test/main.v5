@@ -1,0 +1,15 @@
+import v5 as V;
+import "other.v5" as Other;
+
+function z() {
+    return "z";
+}
+
+
+main() {
+    var d = 10;
+    int a = 10;
+    string s = "string";
+    d = "";    
+    console.log("A");
+}

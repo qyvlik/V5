@@ -15,6 +15,8 @@
 
 #define V5_INLINE inline
 
+#define V5_INTERFACE class
+
 namespace V5 {
 
 class Object;
