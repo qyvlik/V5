@@ -5,6 +5,10 @@ CppApplication {
     consoleApplication: true
     files: [
         "main.cpp",
+        "src/parser/scanner.cpp",
+        "src/parser/scanner.h",
+        "src/parser/token.cpp",
+        "src/parser/token.h",
     ]
 
     cpp.cxxFlags:"-std=c++11"
