@@ -5,25 +5,6 @@ CppApplication {
     consoleApplication: true
     files: [
         "main.cpp",
-        "src/argument.cpp",
-        "src/argument.h",
-        "src/internal/lexicalparser.cpp",
-        "src/internal/lexicalparser.h",
-        "src/internal/token.cpp",
-        "src/internal/token.h",
-        "src/object.cpp",
-        "src/object.h",
-        "src/return.cpp",
-        "src/return.h",
-        "src/scanner.cpp",
-        "src/scanner.h",
-        "src/v5.h",
-        "src/v5parser.cpp",
-        "src/v5parser.h",
-        "src/variant.cpp",
-        "src/variant.h",
-        "src/variant_p.cpp",
-        "src/variant_p.h",
     ]
 
     cpp.cxxFlags:"-std=c++11"
