@@ -45,7 +45,7 @@ int Scanner::scan()
             doubleWordToken();
         } else if(letter == '/') {
             commentToken();
-        } else if(letter == '\"' || letter == '\'') {
+        } else if(letter == '\"' || letter == '\'' || letter == '`') {
             stringToken();
         }else {
             outputStream->error( inputStream->streamName(),
@@ -146,8 +146,14 @@ void Scanner::stringToken()
     bool error = false;
     if(letter == '"') {
         flag = '"';
-    } else {
+    } else if(letter == '\'') {
         flag = '\'';
+
+
+        //! `var codestring = "string"; `
+        //!  code string ,can inject into the c++ runtime
+    } else {
+        flag = '`';
     }
 
     token.clear();
@@ -195,6 +201,8 @@ void Scanner::stringToken()
                 token.push_back('\''); letter = inputStream->get(); continue;
             case '"':
                 token.push_back('\"'); letter = inputStream->get(); continue;
+            case '`':
+                token.push_back('`'); letter = inputStream->get(); continue;
             default:
                 break;
             }
