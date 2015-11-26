@@ -1,6 +1,8 @@
 #include <iostream>
 #include "src/parser/scanner.h"
 #include "src/parser/parser.h"
+#include "src/engine/instruction.h"
+#include "src/engine/label.h"
 
 using namespace std;
 
@@ -14,7 +16,6 @@ public:
         std::copy(tokenList.begin(),
                   tokenList.end(),
                   std::back_inserter(tokenVector));
-        // tokenVector.push_back(Token());  // push a null token
     }
 
     bool getToken(string &tokenType, string &token) override {
@@ -38,17 +39,59 @@ public:
     bool isEnd() override {
         return this->pos >= (tokenVector.size()-1);
     }
-
-
 private:
     std::vector<Token> tokenVector;
     size_t pos;
 };
 
-
-
-int main(int , char** argv)
+class ParserOutputStream : public Parser::OutputStream
 {
+public:
+    virtual void output(const std::string& operationType,
+                        const std::string& arg0,
+                        const std::string& arg1,
+                        const std::string& result) {
+        instructionSet
+                .push_back(
+                    Instruction(operationType,
+                                arg0,
+                                arg1,
+                                result));
+    }
+
+    std::vector<Instruction> getInstructionSet() const {
+        return instructionSet;
+    }
+
+    //@Test
+    void printInstructionSet()const {
+        for (auto iter : instructionSet) {
+
+            if(Label::isLabel(iter.operationType)) {
+                cout  << iter.operationType << " "
+                      << iter.arg0 << " :"
+                      << endl;
+            } else {
+                cout << "\t"
+                     << iter.operationType << ","
+                     << iter.arg0 << ","
+                     << iter.arg1 << ","
+                     << iter.arg2 << endl;
+            }
+        }
+    }
+
+private:
+    std::vector<Instruction> instructionSet;
+};
+
+
+int main(int ,
+         char**
+         argv
+         )
+{
+
     cout << argv[0] << endl;
     Scanner scanner("./test01.v5");
     if(scanner.scan()!=1) {
@@ -58,16 +101,25 @@ int main(int , char** argv)
 
         Parser::InputStream* input =
                 new TokenListInputStream(scanner.getTokenList());
-        Parser::OutputStream* output = Parser::getOutputStream("./test01.v5c");
+        // Parser::OutputStream* output = Parser::getOutputStream("./test01.v5c");
+        Parser::OutputStream* output = new ParserOutputStream();
         parser.parse(input, output);
+
+        dynamic_cast<ParserOutputStream*>(output)->printInstructionSet();
+
 
         delete input;
         delete output;
     } else {
         cout << "open scan file fail!" << endl;
     }
+
+    getchar();
+
     return 0;
 }
+
+
 
 
 

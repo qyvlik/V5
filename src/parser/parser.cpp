@@ -1,5 +1,5 @@
 #include "parser.h"
-
+#include "token.h"
 #include <iostream>
 #include <sstream>
 
@@ -198,9 +198,10 @@ int Parser::statement()
         es = compound_stat();
     }
 
-    if(es == 0 && (m_tokenType == "ID"
-                   || m_tokenType == "NUMBER"
-                   || m_tokenType == "STRING"
+    if(es == 0 && (m_tokenType == Token::ID
+                   || m_tokenType == Token::NUMBER
+                   || m_tokenType == Token::STRING
+                   || m_tokenType == Token::CODESTRING
                    || m_tokenType == "(" ) )
     {
         es = expression_stat();
@@ -237,12 +238,13 @@ int Parser::if_stat()
 
     //! label[0]
     string label0 = labelCreator->getLabel();
-    this->m_outputStream->output("GOTO", quadrupleCreator->top(),
+    this->m_outputStream->output(Token::GOTO,
+                                 quadrupleCreator->top(),
                                  label0,          // label[0]
                                  label0 +"#1");   // label[1]
     //  label[1] = label[0] + label[0][label[0].length-1]
 
-    this->m_outputStream->output("LABEL", label0 , ":", "");
+    this->m_outputStream->output(Token::LABEL, label0 , ":", "");
 
     //! 条件为真时的执行语句
     es = statement();
@@ -252,7 +254,10 @@ int Parser::if_stat()
     }
 
     //! label[1]
-    this->m_outputStream->output("LABEL", labelCreator->getLabel(),":","");
+    this->m_outputStream->output(Token::LABEL,
+                                 labelCreator->getLabel(),
+                                 ":",
+                                 "");
 
     this->m_inputStream->getToken(m_tokenType, m_token);
 
@@ -290,14 +295,14 @@ int Parser::while_stat()
     string label0 = labelCreator->getLabel();
 
     // this->printPos();
-    this->m_outputStream->output("LOOP_START_LABEL", label0,":","");
+    this->m_outputStream->output(Token::LOOP_START_LABEL, label0,":","");
 
     this->m_inputStream->getToken(m_tokenType, m_token);
 
     //! while 循环跳出条件判断
     es = expression();
 
-    this->m_outputStream->output("LOOP_GOTO",
+    this->m_outputStream->output(Token::LOOP_GOTO,
                                  quadrupleCreator->top(),
                                  label0+"#1",
                                  label0+"#2");
@@ -312,17 +317,26 @@ int Parser::while_stat()
 
     //! label[1]
     //! while 循环体
-    this->m_outputStream->output("LOOP_BODY_LABEL", labelCreator->getLabel(), ":", "");
+    this->m_outputStream->output(Token::LOOP_BODY_LABEL,
+                                 labelCreator->getLabel(),
+                                 ":",
+                                 "");
 
     this->m_inputStream->getToken(m_tokenType, m_token);
 
     es = statement();
 
-    this->m_outputStream->output("LOOP_JUMP", label0, "", "");
+    this->m_outputStream->output(Token::LOOP_JUMP,
+                                 label0,
+                                 "",
+                                 "");
 
     //! label[2]
     //! 跳出while循环
-    this->m_outputStream->output("LOOP_END_LABEL", labelCreator->getLabel(),":","");
+    this->m_outputStream->output(Token::LOOP_END_LABEL,
+                                 labelCreator->getLabel(),
+                                 ":",
+                                 "");
 
 
     labelCreator->unGet();
@@ -358,13 +372,16 @@ int Parser::for_stat()
     //! compare
     //! label[0]
     string label0 = labelCreator->getLabel();
-    this->m_outputStream->output("LOOP_START_LABEL", label0,":","");
+    this->m_outputStream->output(Token::LOOP_START_LABEL,
+                                 label0,
+                                 ":",
+                                 "");
 
     this->m_inputStream->getToken(m_tokenType, m_token);
 
     es = expression();
 
-    this->m_outputStream->output("LOOP_GOTO",
+    this->m_outputStream->output(Token::LOOP_GOTO,
                                  quadrupleCreator->top(),
                                  label0+"#1",
                                  label0+"#2");
@@ -379,7 +396,10 @@ int Parser::for_stat()
 
     //! step
     //! label[1]
-    this->m_outputStream->output("LOOP_BODY_LABEL", labelCreator->getLabel(),":","");
+    this->m_outputStream->output(Token::LOOP_BODY_LABEL,
+                                 labelCreator->getLabel(),
+                                 ":",
+                                 "");
 
     this->m_inputStream->getToken(m_tokenType, m_token);
 
@@ -397,11 +417,14 @@ int Parser::for_stat()
 
     es = statement();
 
-    this->m_outputStream->output("LOOP_JUMP", label0, "", "");
+    this->m_outputStream->output(Token::LOOP_JUMP, label0, "", "");
 
     //! label[2]
     //! 跳出for循环
-    this->m_outputStream->output("LOOP_END_LABEL", labelCreator->getLabel(),":","");
+    this->m_outputStream->output(Token::LOOP_END_LABEL,
+                                 labelCreator->getLabel(),
+                                 ":",
+                                 "");
 
     labelCreator->unGet();
     labelCreator->unGet();
@@ -472,7 +495,6 @@ int Parser::expression()
 
             // 生成四元式时记录下操作符
 
-
             this->m_inputStream->getToken(m_tokenType, m_token);
 
             es = bool_expr();
@@ -486,7 +508,9 @@ int Parser::expression()
             quadrupleCreator->setOperation(tokenType);
             quadrupleCreator->outputQuadruple(this->m_outputStream);
         } else {
-            this->m_inputStream->seek(fileadd);              // 若非 '=', 则文件指针回退到 '=' 前的标识符
+
+            // 若非 '=', 则文件指针回退到 '=' 前的标识符
+            this->m_inputStream->seek(fileadd);
 
             es = bool_expr();
 
@@ -628,9 +652,10 @@ int Parser::factor()
         this->m_inputStream->getToken(m_tokenType, m_token);
     } else {
         // ID NUMBER STRING
-        if(m_tokenType == "ID"
-                || m_tokenType == "NUMBER"
-                || m_tokenType == "STRING")
+        if(m_tokenType == Token::ID
+                || m_tokenType == Token::NUMBER
+                || m_tokenType == Token::CODESTRING
+                || m_tokenType == Token::STRING)
         {
             //! 将单因子push到四元式中
             quadrupleCreator->push(m_token);

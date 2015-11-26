@@ -19,6 +19,16 @@ public:
     static const std::string KEYWORD;
     static const std::string ERROR;
 
+    static const std::string LABEL;
+    static const std::string LOOP_START_LABEL;
+    static const std::string LOOP_BODY_LABEL;
+    static const std::string LOOP_END_LABEL;
+
+    static const std::string LOOP_GOTO;
+    static const std::string LOOP_JUMP;
+
+    static const std::string GOTO;
+
     std::string getTokenType() const;
 
     void setTokenType(const std::string &value);

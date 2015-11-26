@@ -14,6 +14,20 @@ const string Token::KEYWORD = "KEYWORD";
 
 const string Token::ERROR = "ERROR";
 
+const string Token::LABEL = "LABEL";
+
+const string Token::LOOP_START_LABEL = "LOOP_START_LABEL";
+
+const string Token::LOOP_BODY_LABEL = "LOOP_BODY_LABEL";
+
+const string Token::LOOP_END_LABEL = "LOOP_END_LABEL";
+
+const string Token::LOOP_GOTO = "LOOP_GOTO";
+
+const string Token::LOOP_JUMP = "LOOP_JUMP";
+
+const string Token::GOTO = "GOTO";
+
 const vector<string> Token::KeyWord = {
     "if", "else","true","false",
     "for", "while", "do",
