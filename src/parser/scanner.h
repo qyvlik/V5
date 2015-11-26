@@ -12,6 +12,8 @@ public:
     explicit Scanner(const std::string& filename);
     ~Scanner();
 
+    void clear();
+
     int scan();
     std::list<Token> getTokenList() const;
 
@@ -76,6 +78,7 @@ protected:
         virtual ~OutputStream()
         { }
 
+        virtual void clear();
         virtual void output(const Token& token);
         virtual void error(const std::string& filename,
                            int lineNumber,

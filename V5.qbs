@@ -5,6 +5,10 @@ CppApplication {
     consoleApplication: true
     files: [
         "main.cpp",
+        "src/engine/instruction.cpp",
+        "src/engine/instruction.h",
+        "src/engine/label.cpp",
+        "src/engine/label.h",
         "src/parser/parser.cpp",
         "src/parser/parser.h",
         "src/parser/scanner.cpp",

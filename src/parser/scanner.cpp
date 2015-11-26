@@ -17,6 +17,11 @@ Scanner::~Scanner()
     delete inputStream;
 }
 
+void Scanner::clear()
+{
+    outputStream->clear();
+}
+
 int Scanner::scan()
 {
     if(!inputStream->isOpen()) {
@@ -258,6 +263,11 @@ void Scanner::InputStream::close(){
 }
 
 //-----------------------------------------------------------------------------
+
+void Scanner::OutputStream::clear()
+{
+    tokenList.clear();
+}
 
 void Scanner::OutputStream::output(const Token &token)
 {

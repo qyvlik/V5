@@ -3,6 +3,7 @@
 #include "src/parser/parser.h"
 
 using namespace std;
+
 //! [STL-容器间的复制list&vector](http://cooker.iteye.com/blog/689202)
 class TokenListInputStream : public Parser::InputStream
 {
@@ -13,11 +14,11 @@ public:
         std::copy(tokenList.begin(),
                   tokenList.end(),
                   std::back_inserter(tokenVector));
-        tokenVector.push_back(Token());  // push a null token
+        // tokenVector.push_back(Token());  // push a null token
     }
 
     bool getToken(string &tokenType, string &token) override {
-        if(pos <= tokenVector.size()) {
+        if(pos < tokenVector.size()) {
             tokenType = tokenVector.at(pos).getTokenType();
             token = tokenVector.at(pos).getTokenValue();
             pos+=1;
@@ -45,19 +46,26 @@ private:
 };
 
 
-int main(int , char** )
+
+int main(int , char** argv)
 {
+    cout << argv[0] << endl;
     Scanner scanner("./test01.v5");
-    scanner.scan();
-    scanner.printTokenList();
+    if(scanner.scan()!=1) {
+        scanner.printTokenList();
 
-    Parser parser;
+        Parser parser;
 
-    Parser::InputStream* input = new TokenListInputStream(scanner.getTokenList());
-    Parser::OutputStream* output = Parser::getOutputStream("./test01.v5c");
-    parser.parse(input, output);
+        Parser::InputStream* input =
+                new TokenListInputStream(scanner.getTokenList());
+        Parser::OutputStream* output = Parser::getOutputStream("./test01.v5c");
+        parser.parse(input, output);
 
-
+        delete input;
+        delete output;
+    } else {
+        cout << "open scan file fail!" << endl;
+    }
     return 0;
 }
 
