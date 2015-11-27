@@ -28,6 +28,8 @@ const string Token::LOOP_JUMP = "LOOP_JUMP";
 
 const string Token::GOTO = "GOTO";
 
+const string Token::DECLARA = "DECLARA";
+
 const vector<string> Token::KeyWord = {
     "if", "else","true","false",
     "for", "while", "do",

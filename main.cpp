@@ -88,11 +88,11 @@ private:
 
 int main(int ,
          char**
-         argv
+         //argv
          )
 {
 
-    cout << argv[0] << endl;
+    //cout << argv[0] << endl;
     Scanner scanner("./test01.v5");
     if(scanner.scan()!=1) {
         scanner.printTokenList();
@@ -102,14 +102,15 @@ int main(int ,
         Parser::InputStream* input =
                 new TokenListInputStream(scanner.getTokenList());
         // Parser::OutputStream* output = Parser::getOutputStream("./test01.v5c");
-        Parser::OutputStream* output = new ParserOutputStream();
+        ParserOutputStream* output = new ParserOutputStream();
+
         parser.parse(input, output);
 
-        dynamic_cast<ParserOutputStream*>(output)->printInstructionSet();
-
+        output->printInstructionSet();
 
         delete input;
         delete output;
+
     } else {
         cout << "open scan file fail!" << endl;
     }

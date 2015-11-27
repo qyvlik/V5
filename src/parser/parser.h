@@ -75,6 +75,7 @@ protected:
 
     // <声明语句>::= <int>变量;
     // <declaration_stat>::= [int | double | long | var] ID;
+    // type temp0 [,temp1] [,temp2]  ... [,tempn] ;
 
     int declaration_stat();
 

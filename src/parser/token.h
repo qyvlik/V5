@@ -29,6 +29,8 @@ public:
 
     static const std::string GOTO;
 
+    static const std::string DECLARA;
+
     std::string getTokenType() const;
 
     void setTokenType(const std::string &value);

@@ -12,9 +12,12 @@ public:
     explicit Scanner(const std::string& filename);
     ~Scanner();
 
+    bool setScanFile(const std::string& filename);
+
     void clear();
 
     int scan();
+
     std::list<Token> getTokenList() const;
 
     //@Test
@@ -56,6 +59,7 @@ protected:
     public:
         explicit InputStream(const std::string& filename);
         ~InputStream();
+        bool open(const std::string &filename);
         bool isOpen()const;
         int get();
         int lineNumber() const;

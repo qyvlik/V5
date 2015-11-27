@@ -115,28 +115,70 @@ int Parser::declaration_list()
     return es;
 }
 
-
+// type temp0 [,temp1] [,temp2]  ... [,tempn] ;
 int Parser::declaration_stat()
 {
+    //    int es = 0;
+
+    //    string type = m_token;
+
+    //    this->m_inputStream->getToken(m_tokenType, m_token);
+
+    //    if(m_tokenType != Token::ID){                   // 不是标识符
+    //        return (es = 3);
+    //    }
+
+    //    string id = m_token;
+
+    //    this->m_inputStream->getToken(m_tokenType, m_token);
+
+
+    //    if(m_token != ";"){
+    //        return (es = 4);
+    //    }
+
+    //    this->m_outputStream->output("DECLARA", type, id, "_");
+
+    //    this->m_inputStream->getToken(m_tokenType, m_token);
+
+
     int es = 0;
 
     string type = m_token;
 
     this->m_inputStream->getToken(m_tokenType, m_token);
 
-    if(m_tokenType != "ID"){                   // 不是标识符
+    if(m_tokenType != Token::ID){                   // 不是标识符
         return (es = 3);
     }
 
     string id = m_token;
 
+    this->m_outputStream->output(Token::DECLARA, type, id, "");
+
     this->m_inputStream->getToken(m_tokenType, m_token);
+
+
+    // [, temp1..n]
+    while(m_token == ",") {
+
+        this->m_inputStream->getToken(m_tokenType, m_token);
+
+        if(m_tokenType != Token::ID){                   // 不是标识符
+            return (es = 3);
+        }
+
+        id = m_token;
+
+        this->m_outputStream->output(Token::DECLARA, type, id, "");
+
+        this->m_inputStream->getToken(m_tokenType, m_token);
+
+    }
 
     if(m_token != ";"){
         return (es = 4);
     }
-
-    this->m_outputStream->output("DECLARA", type, id, "_");
 
     this->m_inputStream->getToken(m_tokenType, m_token);
 

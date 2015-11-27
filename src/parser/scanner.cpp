@@ -17,14 +17,22 @@ Scanner::~Scanner()
     delete inputStream;
 }
 
+bool Scanner::setScanFile(const string &filename)
+{
+    return inputStream->open(filename);
+}
+
 void Scanner::clear()
 {
+    inputStream->close();
     outputStream->clear();
 }
 
 int Scanner::scan()
 {
     if(!inputStream->isOpen()) {
+
+        cerr << "open file fail!" << endl;
         return 1;
     }
 
@@ -47,7 +55,9 @@ int Scanner::scan()
             commentToken();
         } else if(letter == '\"' || letter == '\'' || letter == '`') {
             stringToken();
-        }else {
+        }
+        /*
+        else {
             outputStream->error( inputStream->streamName(),
                                  inputStream->lineNumber(),
                                  inputStream->columnNumber(),
@@ -59,6 +69,7 @@ int Scanner::scan()
             // outputStream->error(Scanner::ERROR,token);
             return 1;
         }
+        */
     }
     return 0;
 }
@@ -240,6 +251,17 @@ Scanner::InputStream::~InputStream(){
     fread.close();
 }
 
+bool Scanner::InputStream::open(const string &filename)
+{
+    fread.clear();
+    fread.close();
+    fread.open(filename, std::ios_base::binary | std::ios_base::in);
+    m_lineNumber = 1;
+    m_columnNumber = 0;
+    m_filename = filename;
+    return fread.is_open();
+}
+
 bool Scanner::InputStream::isOpen() const {
     return fread.is_open();
 }
@@ -267,6 +289,9 @@ std::string Scanner::InputStream::streamName() const{
 }
 
 void Scanner::InputStream::close(){
+    m_lineNumber = 1;
+    m_columnNumber = 0;
+    m_filename.clear();
     fread.close();
 }
 
